@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Racing Starter Kit/RSK Assets/Scenes/SampleScene.unity
+    guid: adc28652a668a9646b0352d63f41b808
+  m_configObjects:
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: f2cbd5f7e791abb4fb482027bf01c60f,
+      type: 2}
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000,
+      guid: b46f7e6d968ce684bbe10b975df61b79, type: 2}
+  m_UseUCBPForAssetBundles: 0
