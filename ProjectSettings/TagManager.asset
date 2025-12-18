@@ -2,8 +2,11 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
-  tags: []
+  serializedVersion: 3
+  tags:
+  - Bot1
+  - Bot2
+  - Bot3
   layers:
   - Default
   - TransparentFX
@@ -12,7 +15,7 @@ TagManager:
   - Water
   - UI
   - AIPlayer
-  - 
+  - PostProcess
   - 
   - 
   - 
@@ -38,6 +41,14 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: 
+    uniqueID: 1815600145
+    locked: 0
+  - name: 
+    uniqueID: 2623689397
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
+  m_RenderingLayers:
+  - Default

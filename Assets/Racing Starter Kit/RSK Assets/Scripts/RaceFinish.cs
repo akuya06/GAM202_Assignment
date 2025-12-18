@@ -48,14 +48,32 @@ namespace SpinMotion
         {
             if (raceFinished) return; // could be by timeout
 
-            //if the player completes all the selected laps
+            // Nếu player hoàn thành đủ vòng
             if (realTimeRacePositions.Item.LapScores[0] > RaceData.LapsSelected)
             {
                 var raceWon = realTimeRacePositions.Item.GetPlayerRacePosition(0) == 1;
+                raceFinished = true;
                 if (raceWon)
                     gameEvents.RaceFinishedEvent.Invoke(RaceFinishType.Win);
                 else
                     gameEvents.RaceFinishedEvent.Invoke(RaceFinishType.Lose);
+                return;
+            }
+
+            // Kiểm tra các bot (index 1, 2, 3)
+            for (int i = 1; i < realTimeRacePositions.Item.LapScores.Count; i++)
+            {
+                if (realTimeRacePositions.Item.LapScores[i] > RaceData.LapsSelected)
+                {
+                    // Nếu player chưa hoàn thành đủ vòng thì thua
+                    if (realTimeRacePositions.Item.LapScores[0] <= RaceData.LapsSelected)
+                    {
+                        raceFinished = true;
+                        Debug.Log($"[RaceFinish] Bot {i} đã hoàn thành đủ vòng, player thua!");
+                        gameEvents.RaceFinishedEvent.Invoke(RaceFinishType.Lose);
+                        return;
+                    }
+                }
             }
         }
 

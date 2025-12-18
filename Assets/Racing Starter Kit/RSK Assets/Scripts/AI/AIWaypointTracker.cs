@@ -1,12 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-/// <summary>
-/// This script will move the AI waypoint tracker when the AI car triggers a point. The AI car will always follow the tracker
-/// and the tracker will take the position of the next point that is placed on the racetrack
-/// in this way the AI car will roam around the track all the time
-/// (enable AI tracker & AI waypoints mesh renderer to understand better)
-/// </summary>
+
 namespace SpinMotion
 {
     public class AIWaypointTracker : MonoBehaviour
@@ -14,19 +9,77 @@ namespace SpinMotion
         public GameEvents gameEvents;
         public AIWaypointSet aiWaypointSet;
         public Vector3 trackerScale;
+        
+        [Header("AI Car")]
+        public GameObject aiCar;
 
         private List<AIWaypoint> aiWaypoints = new();
         private Transform currentWaypoint;
         private int currentIndex;
         private Collider aiCarCollider;
         private Collider waypointTrackerCollider;
+        private CarAIControl aiControl;
+        private float checkDistanceTimer = 0f;
         
         private void Awake()
         {
-            gameEvents.RestartRaceEvent.AddListener(OnRestartRace);
+            if (gameEvents != null)
+                gameEvents.RestartRaceEvent.AddListener(OnRestartRace);
+                
             waypointTrackerCollider = GetComponent<BoxCollider>();
+            if (waypointTrackerCollider != null)
+            {
+                waypointTrackerCollider.isTrigger = true;
+            }
+            
             transform.localScale = trackerScale;
+        }
+
+        private void Start()
+        {
+            StartCoroutine(SetupDelayed());
+        }
+
+        private IEnumerator SetupDelayed()
+        {
+            yield return new WaitForEndOfFrame();
+            
             ResetTracker();
+            
+            yield return new WaitForEndOfFrame();
+            
+            if (aiCar != null)
+            {
+                aiCarCollider = aiCar.GetComponent<Collider>();
+                
+                aiControl = aiCar.GetComponent<CarAIControl>();
+                if (aiControl != null)
+                {
+                    aiControl.SetTarget(this.transform);
+                }
+            }
+        }
+
+        private void Update()
+        {
+            checkDistanceTimer += Time.deltaTime;
+            if (checkDistanceTimer > 0.5f)
+            {
+                checkDistanceTimer = 0f;
+                CheckIfReachedWaypoint();
+            }
+        }
+
+        private void CheckIfReachedWaypoint()
+        {
+            if (aiCar == null || aiWaypoints == null || aiWaypoints.Count == 0) return;
+
+            float distance = Vector3.Distance(aiCar.transform.position, transform.position);
+            
+            if (distance < 10f)
+            {
+                MoveToNextWaypoint();
+            }
         }
 
         private void OnRestartRace()
@@ -36,7 +89,10 @@ namespace SpinMotion
 
         private void ResetTracker()
         {
-            this.aiWaypoints = aiWaypointSet.Items;
+            if (aiWaypointSet == null || aiWaypointSet.Items == null || aiWaypointSet.Items.Count == 0)
+                return;
+
+            this.aiWaypoints = new List<AIWaypoint>(aiWaypointSet.Items);
             currentIndex = 0;
             UpdateTrackerPosition();
         }
@@ -46,25 +102,43 @@ namespace SpinMotion
             this.aiCarCollider = aiCarCollider;
         }
 
-        IEnumerator OnTriggerEnter(Collider collider)
+        private void OnTriggerEnter(Collider collider)
         {
-            if (collider.GetInstanceID() == aiCarCollider.GetInstanceID())
+            if (aiCarCollider != null && collider.GetInstanceID() == aiCarCollider.GetInstanceID())
             {
-                waypointTrackerCollider.enabled = false;
-                currentIndex++;
-                if (currentIndex >= aiWaypoints.Count)
-                    currentIndex = 0;
-
-                UpdateTrackerPosition();
-                yield return new WaitForSeconds(0.1f);
-                waypointTrackerCollider.enabled = true;
+                MoveToNextWaypoint();
             }
+        }
+
+        private void MoveToNextWaypoint()
+        {
+            if (aiWaypoints == null || aiWaypoints.Count == 0)
+                return;
+
+            currentIndex++;
+            if (currentIndex >= aiWaypoints.Count)
+                currentIndex = 0;
+
+            UpdateTrackerPosition();
         }
 
         private void UpdateTrackerPosition()
         {
-            currentWaypoint = aiWaypoints[currentIndex].aiWaypointTransform;
-            this.transform.position = currentWaypoint.position;
+            if (aiWaypoints == null || aiWaypoints.Count == 0 || currentIndex >= aiWaypoints.Count)
+                return;
+
+            var waypoint = aiWaypoints[currentIndex];
+            if (waypoint?.aiWaypointTransform != null)
+            {
+                currentWaypoint = waypoint.aiWaypointTransform;
+                this.transform.position = currentWaypoint.position;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (gameEvents != null)
+                gameEvents.RestartRaceEvent.RemoveListener(OnRestartRace);
         }
     }
 }

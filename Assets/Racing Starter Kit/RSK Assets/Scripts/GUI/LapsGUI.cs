@@ -1,4 +1,4 @@
-﻿using TMPro;
+using TMPro;
 using UnityEngine;
 /// <summary>
 /// display player current laps done (counted by RealTimeRacePositions script)

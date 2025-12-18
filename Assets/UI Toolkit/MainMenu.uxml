@@ -1,0 +1,50 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/MainMenu.uss?fileID=7433441132597879392&amp;guid=13598ea77263e114e83d57cd722663b9&amp;type=3#MainMenu" />
+    <engine:VisualElement name="Root" class="root" style="background-image: url(&quot;project://database/Assets/backgrounfredcar.png?fileID=2800000&amp;guid=33be02c792f0fd64fbce76853d7fb040&amp;type=3#backgrounfredcar&quot;); background-size: cover;">
+        <engine:VisualElement class="title-container">
+            <engine:Label text="SUPER RACING" class="title-text" />
+            <engine:Label text="RACING" class="title-text-shadow" />
+        </engine:VisualElement>
+        <engine:VisualElement name="MainMenuPanel" class="menu-panel">
+            <engine:VisualElement class="button-list">
+                <engine:Button name="StartButton" class="game-button start-button">
+                    <engine:Label text="Start" class="button-text" />
+                </engine:Button>
+                <engine:Button name="SettingsButton" class="game-button">
+                    <engine:Label text="Setting" class="button-text" />
+                </engine:Button>
+                <engine:Button name="QuitButton" class="game-button">
+                    <engine:Label text="Quit" class="button-text" />
+                </engine:Button>
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:VisualElement name="SettingsPanel" class="settings-panel hidden">
+            <engine:VisualElement class="settings-window">
+                <engine:Label text="SETTINGS" class="settings-title" />
+                <engine:VisualElement class="settings-content">
+                    <engine:VisualElement class="setting-row">
+                        <engine:Label text="Sound Volume" class="setting-label" />
+                        <engine:Slider name="SoundSlider" low-value="0" high-value="100" value="80" class="setting-slider" />
+                        <engine:Label name="SoundValue" text="80%" class="setting-value" />
+                    </engine:VisualElement>
+                    <engine:VisualElement class="setting-row">
+                        <engine:Label text="Music Volume" class="setting-label" />
+                        <engine:Slider name="MusicSlider" low-value="0" high-value="100" value="60" class="setting-slider" />
+                        <engine:Label name="MusicValue" text="60%" class="setting-value" />
+                    </engine:VisualElement>
+                    <engine:VisualElement class="setting-row">
+                        <engine:Label text="Graphics Quality" class="setting-label" />
+                        <engine:DropdownField name="QualityDropdown" choices="Low,Medium,High,Ultra" value="High" class="setting-dropdown" />
+                    </engine:VisualElement>
+                    <engine:VisualElement class="setting-row">
+                        <engine:Label text="Fullscreen" class="setting-label" />
+                        <engine:Toggle name="FullscreenToggle" value="true" class="setting-toggle" />
+                    </engine:VisualElement>
+                </engine:VisualElement>
+                <engine:Button name="BackButton" class="game-button back-button">
+                    <engine:Label text="Back" class="button-text" />
+                </engine:Button>
+            </engine:VisualElement>
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>
